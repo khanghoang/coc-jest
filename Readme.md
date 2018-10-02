@@ -42,6 +42,7 @@ command! JestInit :call CocAction('runCommand', 'jest.init')
 - `jest.detectOpenHandles`: detect open handles, default `false`.
 - `jest.forceExit`: force jest exit on test finish, default `false`.
 - `jest.noStackTrace`: disable stack trace, default `false`.
+- `jest.terminalPosition`: position of terminal, default `right`.
 
 ## LICENSE
 

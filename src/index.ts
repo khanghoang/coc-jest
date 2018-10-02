@@ -65,9 +65,11 @@ async function jestSingle(): Promise<void> {
       name = ms[2]
       break
     }
+    lnum = lnum - 1
   }
   if (!name) return
-  cmd = `${cmd} ${path.relative(root, u.fsPath)} -t ${name}`
+  name = name.replace(/'/g, "\\'")
+  cmd = `${cmd} ${path.relative(root, u.fsPath)} -t '${name}'`
   await runJestCommand(root, cmd)
 }
 
@@ -85,10 +87,14 @@ async function jestProject(): Promise<void> {
 
 async function runJestCommand(cwd: string, cmd: string): Promise<void> {
   if (bufnr) {
-    await nvim.command(`slient! bd! ${bufnr}`)
+    await nvim.command(`silent! bd! ${bufnr}`)
   }
+  let document = await workspace.document
+  let config = workspace.getConfiguration('jest', document ? document.uri : undefined)
+  let position = config.get<string>('terminalPosition')
   bufnr = await nvim.call('coc#util#open_terminal', {
     keepfocus: 1,
+    position,
     cwd,
     cmd
   })
