@@ -93,6 +93,7 @@ async function runJestCommand(cwd: string, cmd: string): Promise<void> {
   let config = workspace.getConfiguration('jest', document ? document.uri : undefined)
   let position = config.get<string>('terminalPosition')
   bufnr = await nvim.call('coc#util#open_terminal', {
+    autoclose: 0,
     keepfocus: 1,
     position,
     cwd,
