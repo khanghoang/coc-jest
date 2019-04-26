@@ -4,14 +4,14 @@ Jest extension for [coc.nvim](https://github.com/neoclide/coc.nvim).
 
 ## Features
 
-- Reuse terminal buffer for jest command.
+- Use current terminal buffer for jest commands.
 - Highlight failed tests.
-- Contributes useful coc commands.
-- Options for customize.
+- Contributes to useful coc commands.
+- Options for customization.
 
 ## Installation
 
-In your vim/neovim, run commands:
+In your vim/neovim, run the command:
 
 ```vim
 :CocInstall coc-jest
