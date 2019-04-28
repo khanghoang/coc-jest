@@ -6,8 +6,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "tsc -p tsconfig.json",
-    "prepare": "yarn clean && yarn build",
-    "test": "jest"
+    "prepare": "npx npm-run-all clean build"
   },
   "engines": {
     "coc": ">=0.0.23"
