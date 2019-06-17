@@ -1,6 +1,6 @@
 {
   "name": "coc-jest",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "jest extension for coc.nvim",
   "main": "lib/index.js",
   "scripts": {
