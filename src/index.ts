@@ -1,8 +1,7 @@
-import { ExtensionContext, workspace, commands } from 'coc.nvim'
+import { Uri, ExtensionContext, workspace, commands } from 'coc.nvim'
 import path from 'path'
 import which from 'which'
 import { findUp, existAsync } from './util'
-import Uri from 'vscode-uri'
 
 let bufnr: number
 let { nvim } = workspace
