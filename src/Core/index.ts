@@ -2,6 +2,8 @@ import { Uri, ExtensionContext, workspace, commands } from 'coc.nvim'
 import path from 'path'
 import which from 'which'
 import { findUp, existAsync } from './util'
+import { superMode } from './superMode';
+import {setupErrorHandler} from './addToOutput';
 
 let bufnr: number
 let { nvim } = workspace
@@ -13,7 +15,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // subscriptions.push(commands.registerCommand('jest.projectTest', jestProject))
   // subscriptions.push(commands.registerCommand('jest.fileTest', jestFile, null, true))
   // subscriptions.push(commands.registerCommand('jest.singleTest', jestSingle))
-  subscriptions.push(commands.registerCommand('jest.superMode', jestSingle))
+  subscriptions.push(commands.registerCommand('jest.superMode', superMode))
+  context.subscriptions.push(
+    setupErrorHandler()
+  )
 }
 
 async function initJest(): Promise<void> {

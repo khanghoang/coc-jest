@@ -26,7 +26,7 @@ module.exports = {
     }]
   },
   output: {
-    path: path.join(__dirname, 'lib'),
+    path: path.join(__dirname, 'lib/Core/'),
     filename: 'index.js',
     libraryTarget: "commonjs",
   },
