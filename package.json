@@ -2,11 +2,12 @@
   "name": "coc-jest",
   "version": "1.0.3",
   "description": "jest extension for coc.nvim",
-  "main": "lib/index.js",
+  "main": "lib/core/index.js",
   "scripts": {
     "clean": "rimraf lib",
     "build": "webpack",
-    "prepare": "npx npm-run-all clean build"
+    "prepare": "npx npm-run-all clean build",
+    "watch": "webpack --watch"
   },
   "engines": {
     "coc": ">=0.0.23"

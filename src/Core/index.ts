@@ -9,10 +9,11 @@ let { nvim } = workspace
 export async function activate(context: ExtensionContext): Promise<void> {
   let { subscriptions } = context
 
-  subscriptions.push(commands.registerCommand('jest.init', initJest))
-  subscriptions.push(commands.registerCommand('jest.projectTest', jestProject))
-  subscriptions.push(commands.registerCommand('jest.fileTest', jestFile, null, true))
-  subscriptions.push(commands.registerCommand('jest.singleTest', jestSingle))
+  // subscriptions.push(commands.registerCommand('jest.init', initJest))
+  // subscriptions.push(commands.registerCommand('jest.projectTest', jestProject))
+  // subscriptions.push(commands.registerCommand('jest.fileTest', jestFile, null, true))
+  // subscriptions.push(commands.registerCommand('jest.singleTest', jestSingle))
+  subscriptions.push(commands.registerCommand('jest.superMode', jestSingle))
 }
 
 async function initJest(): Promise<void> {
