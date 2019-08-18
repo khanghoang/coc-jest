@@ -1,12 +1,9 @@
 import { ProjectWorkspace } from "jest-editor-support";
-
 import {
   CodeLens,
-  Position,
-  Range,
   CancellationToken
 } from "vscode-languageserver-protocol";
-import { CodeLensProvider, ExtensionContext, languages, commands } from "coc.nvim";
+import { CodeLensProvider } from "coc.nvim";
 import { resolve } from "path";
 
 import { VimJest } from "../VimJest";
@@ -15,15 +12,15 @@ import { addToOutput } from "./addToOutput";
 export class TestCodeLensProvider implements CodeLensProvider {
   public provideCodeLenses(): Promise<CodeLens[]> {
     const codeLen = {
-      command: { title: "foo", command: 'bar' },
+      command: { title: "Test failed", command: 'echo "bar"' },
       range: {
         start: {
-          line: 1,
+          line: 0,
           character: 1
         },
         end: {
-          line: 2,
-          character: 1
+          line: 0,
+          character: 20
         }
       }
     };
@@ -40,19 +37,6 @@ export class TestCodeLensProvider implements CodeLensProvider {
 }
 
 export function superMode(filename: string): void {
-
-  languages.registerCodeLensProvider(
-    [
-      {language: 'typescript'},
-      {language: 'typescript.tsx'},
-      {language: 'typescriptreact'},
-      {language: 'javascript'},
-      {language: 'javascript.jsx'},
-      {language: 'javascriptreact'}
-    ],
-    new TestCodeLensProvider()
-  );
-
   addToOutput("fooo");
   const jestWorkspace: ProjectWorkspace = new ProjectWorkspace(
     resolve(__dirname, "../../"),

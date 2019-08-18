@@ -12,9 +12,6 @@
   "engines": {
     "coc": ">=0.0.23"
   },
-  "activationEvents": [
-    "*"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/neoclide/coc-jest.git"
@@ -29,6 +26,15 @@
     "url": "https://github.com/neoclide/coc-jest/issues"
   },
   "homepage": "https://github.com/neoclide/coc-jest#readme",
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:javascript.jsx",
+    "onLanguage:typescript",
+    "onLanguage:typescript.tsx",
+    "onLanguage:typescript.jsx",
+    "onLanguage:typescriptreact"
+  ],
   "contributes": {
     "configuration": {
       "type": "object",
