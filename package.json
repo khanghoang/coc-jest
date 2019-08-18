@@ -106,6 +106,7 @@
     "which": "^1.3.1"
   },
   "dependencies": {
-    "jest-editor-support": "26.0.0-beta"
+    "jest-editor-support": "26.0.0-beta",
+    "vscode-languageserver-protocol": "^3.14.1"
   }
 }

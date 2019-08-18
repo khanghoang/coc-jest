@@ -1,8 +1,8 @@
-import { Uri, ExtensionContext, workspace, commands } from 'coc.nvim'
+import { languages, Uri, ExtensionContext, workspace, commands } from 'coc.nvim'
 import path from 'path'
 import which from 'which'
 import { findUp, existAsync } from './util'
-import { superMode } from './superMode';
+import { superMode, TestCodeLensProvider } from './superMode';
 import {setupErrorHandler} from './addToOutput';
 
 let bufnr: number
@@ -16,6 +16,19 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // subscriptions.push(commands.registerCommand('jest.fileTest', jestFile, null, true))
   // subscriptions.push(commands.registerCommand('jest.singleTest', jestSingle))
   subscriptions.push(commands.registerCommand('jest.superMode', superMode))
+
+  languages.registerCodeLensProvider(
+    [
+      {language: 'typescript'},
+      {language: 'typescript.tsx'},
+      {language: 'typescriptreact'},
+      {language: 'javascript'},
+      {language: 'javascript.jsx'},
+      {language: 'javascriptreact'}
+    ],
+    new TestCodeLensProvider()
+  );
+
   context.subscriptions.push(
     setupErrorHandler()
   )
