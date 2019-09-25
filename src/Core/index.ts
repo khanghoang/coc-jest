@@ -37,6 +37,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   context.subscriptions.push(setupErrorHandler());
 
   context.subscriptions.push(codeLensProviderDisposable);
+  
+  // superMode('foo');
 }
 
 async function initJest(): Promise<void> {

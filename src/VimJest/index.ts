@@ -29,7 +29,9 @@ import {addToOutput} from '../Core/addToOutput';
 //   multirootEnv: boolean
 // }
 
-export class VimJest {
+type Handler = (data: JestTotalResults) => void
+
+class VimJest {
   // coverageMapProvider: CoverageMapProvider
   // coverageOverlay: CoverageOverlay
 
@@ -65,6 +67,7 @@ export class VimJest {
 
   // private clearOnNextInput: boolean
   // private status: ReturnType<StatusBar['bind']>
+  private handler: Handler
 
   constructor(
     // context: vscode.ExtensionContext,
@@ -76,9 +79,11 @@ export class VimJest {
     // instanceSettings: InstanceSettings,
     // workspaceFolder: vscode.WorkspaceFolder,
 
-    jestWorkspace: ProjectWorkspace
+    jestWorkspace: ProjectWorkspace,
+    handler: Handler
   ) {
     this.jestWorkspace = jestWorkspace
+    this.handler = handler;
 
     // this.workspaceFolder = workspaceFolder
     // this.channel = outputChannel
@@ -160,7 +165,7 @@ export class VimJest {
       },
     })
 
-    this.assignHandlers(this.jestProcess)
+    this.assignHandlers(this.jestProcess, this.handler)
   }
 
   public stopProcess() {
@@ -422,11 +427,12 @@ export class VimJest {
   //   // this.channel.appendLine(noANSI)
   // }
 
-  private assignHandlers(jestProcess: JestProcess) {
+  private assignHandlers(jestProcess: JestProcess, handler: Handler) {
     jestProcess
       .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {
-        this.updateWithData(data)
-        addToOutput(JSON.stringify(data));
+        handler(data);
+        // this.updateWithData(data)
+        // addToOutput(JSON.stringify(data));
         debugger
       })
       .onJestEditorSupportEvent('executableOutput', (output: string) => {
@@ -531,3 +537,5 @@ export class VimJest {
   //   })
   // }
 }
+
+export { VimJest }

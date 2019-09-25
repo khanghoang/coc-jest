@@ -1,4 +1,4 @@
-import { ProjectWorkspace } from "jest-editor-support";
+import { ProjectWorkspace, JestTotalResults, JestFileResults } from "jest-editor-support";
 import {
   CodeLens,
   CancellationToken
@@ -6,10 +6,14 @@ import {
 import { CodeLensProvider } from "coc.nvim";
 import { resolve } from "path";
 
-import { VimJest } from "../VimJest";
+import { VimJest } from '../VimJest'
+
 import { addToOutput } from "./addToOutput";
 
 export class TestCodeLensProvider implements CodeLensProvider {
+  constructor() {
+    superMode('foo');
+  }
   public provideCodeLenses(): Promise<CodeLens[]> {
     const codeLen = {
       command: { title: "Test failed", command: 'echo "bar"' },
@@ -49,6 +53,11 @@ export function superMode(filename: string): void {
     false
   );
 
-  const vimjest = new VimJest(jestWorkspace);
-  vimjest.startProcess();
+  const vimJest = new VimJest(jestWorkspace, (data: JestTotalResults) => {
+    data.testResults.map(test: JestFileResults => {
+      test.asset
+    })
+    debugger;
+  });
+  vimJest.startProcess();
 }
