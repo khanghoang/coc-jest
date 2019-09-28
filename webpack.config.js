@@ -11,6 +11,7 @@ module.exports = {
   externals: {
     'coc.nvim': 'commonjs coc.nvim'
   },
+  devtool: 'cheap-module-eval-source-map',
   module: {
     rules: [{
       test: /\.ts$/,

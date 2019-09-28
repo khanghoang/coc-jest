@@ -430,8 +430,7 @@ class VimJest {
   private assignHandlers(jestProcess: JestProcess, handler: Handler) {
     jestProcess
       .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {
-        handler(data);
-        // this.updateWithData(data)
+        this.updateWithData(data)
         // addToOutput(JSON.stringify(data));
         debugger
       })
@@ -498,11 +497,12 @@ class VimJest {
   }
 
   private updateWithData(data: JestTotalResults) {
+    debugger;
     const normalizedData = resultsWithLowerCaseWindowsDriveLetters(data)
     // this.coverageMapProvider.update(normalizedData.coverageMap)
 
-    const statusList = this.testResultProvider.updateTestResults(normalizedData)
-    console.log({ statusList })
+    // const statusList = this.testResultProvider.updateTestResults(normalizedData)
+    // console.log({ statusList })
     // updateDiagnostics(statusList, this.failDiagnostics)
 
     // const failedFileCount = failedSuiteCount(this.failDiagnostics)

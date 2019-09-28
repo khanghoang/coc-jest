@@ -41,11 +41,9 @@ export class TestCodeLensProvider implements CodeLensProvider {
 }
 
 export function superMode(filename: string): void {
-  addToOutput("fooo");
   const jestWorkspace: ProjectWorkspace = new ProjectWorkspace(
     resolve(__dirname, "../../"),
-    // resolve(__dirname, "../../node_modules/jest/bin/jest.js"),
-    resolve("/usr/local/bin/jest"),
+    resolve(__dirname, "../../node_modules/jest/bin/jest.js"),
     resolve(__dirname, "../../jest.config.js"),
     20,
     "foo",
@@ -54,10 +52,9 @@ export function superMode(filename: string): void {
   );
 
   const vimJest = new VimJest(jestWorkspace, (data: JestTotalResults) => {
-    data.testResults.map(test: JestFileResults => {
-      test.asset
-    })
-    debugger;
+    // data.testResults.map(test: JestFileResults => {
+    //   test.asset
+    // })
   });
   vimJest.startProcess();
 }

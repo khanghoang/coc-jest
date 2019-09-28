@@ -7,7 +7,8 @@
     "clean": "rimraf lib",
     "build": "webpack",
     "prepare": "npx npm-run-all clean build",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "dev": "webpack --watch"
   },
   "engines": {
     "coc": ">=0.0.23"
@@ -112,6 +113,7 @@
     "which": "^1.3.1"
   },
   "dependencies": {
+    "jest": "^24.9.0",
     "jest-editor-support": "26.0.0-beta",
     "vscode-languageserver-protocol": "^3.14.1"
   }

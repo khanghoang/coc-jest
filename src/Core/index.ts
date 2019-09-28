@@ -5,6 +5,7 @@ import {
   workspace,
   commands
 } from "coc.nvim";
+import path from 'path';
 import which from "which";
 import { findUp, existAsync } from "./util";
 import { superMode, TestCodeLensProvider } from "./superMode";
@@ -35,10 +36,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   );
 
   context.subscriptions.push(setupErrorHandler());
-
   context.subscriptions.push(codeLensProviderDisposable);
-  
-  // superMode('foo');
 }
 
 async function initJest(): Promise<void> {
