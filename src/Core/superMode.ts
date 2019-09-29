@@ -3,12 +3,10 @@ import {
   CodeLens,
   CancellationToken
 } from "vscode-languageserver-protocol";
-import { CodeLensProvider } from "coc.nvim";
+import { CodeLensProvider, diagnosticManager } from "coc.nvim";
 import { resolve } from "path";
-
+import { Diagnostic, Range } from 'vscode-languageserver-types'
 import { VimJest } from '../VimJest'
-
-import { addToOutput } from "./addToOutput";
 
 export const createTestLensProvider = (): CodeLensProvider => {
   const jestWorkspace: ProjectWorkspace = new ProjectWorkspace(
@@ -24,31 +22,38 @@ export const createTestLensProvider = (): CodeLensProvider => {
   const vimJest = new VimJest(jestWorkspace);
   vimJest.handler = () => {};
 
+  let collection = diagnosticManager.create('test')
+
   vimJest.startProcess();
 
   return {
-    provideCodeLenses: (): Promise<CodeLens[]> => {
+    provideCodeLenses: (doc): Promise<CodeLens[]> => {
       return new Promise(resolve => {
         vimJest.handler = (data: JestTotalResults) => {
           let codeLens = [];
+          let diagnostics = [];
+          let uri = doc.uri;
+          collection.set(uri, []);
           data.testResults.forEach(objAssertionResults => {
             objAssertionResults.assertionResults.forEach(test => {
-              codeLens.push({
-                command: { title: test.status, command: 'echo "bar"' },
-                range: {
+              if (test.status === 'failed') {
+                const range = {
                   start: {
                     line: test.location.line,
-                    character: test.location.column
+                    character: test.location.column + 1
                   },
                   end: {
                     line: test.location.line,
-                    character: test.location.column
+                    character: test.location.column + 1
                   }
-                }
-              })
+                };
+                let diagnostic = { message: test.failureMessages[0], range };
+                diagnostics.push(diagnostic);
+              }
             })
           });
-          vimJest.handle = () => {};
+          collection.set(uri, diagnostics)
+          vimJest.handler = () => {};
           resolve(codeLens);
         }
       });
