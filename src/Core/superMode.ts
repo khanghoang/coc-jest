@@ -1,11 +1,12 @@
 import { ProjectWorkspace, JestTotalResults, JestFileResults } from "jest-editor-support";
 import {
   CodeLens,
-  CancellationToken
+  CancellationToken,
+  Diagnostic,
+  Range
 } from "vscode-languageserver-protocol";
 import { CodeLensProvider, diagnosticManager } from "coc.nvim";
 import { resolve } from "path";
-import { Diagnostic, Range } from 'vscode-languageserver-types'
 import { VimJest } from '../VimJest'
 
 export const createTestLensProvider = (): CodeLensProvider => {
@@ -20,7 +21,9 @@ export const createTestLensProvider = (): CodeLensProvider => {
   );
 
   const vimJest = new VimJest(jestWorkspace);
-  vimJest.handler = () => {};
+  vimJest.handler = () => {
+    // noop
+  };
 
   let collection = diagnosticManager.create('test')
 
