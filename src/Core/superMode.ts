@@ -10,37 +10,7 @@ import { VimJest } from '../VimJest'
 
 import { addToOutput } from "./addToOutput";
 
-export class TestCodeLensProvider implements CodeLensProvider {
-  constructor() {
-    superMode('foo');
-  }
-  public provideCodeLenses(): Promise<CodeLens[]> {
-    const codeLen = {
-      command: { title: "Test failed", command: 'echo "bar"' },
-      range: {
-        start: {
-          line: 0,
-          character: 1
-        },
-        end: {
-          line: 0,
-          character: 20
-        }
-      }
-    };
-
-    return Promise.resolve([codeLen]);
-  }
-
-  public resolveCodeLens(
-    codeLens: CodeLens,
-    token: CancellationToken
-  ): Promise<CodeLens> {
-    return Promise.resolve(codeLens);
-  }
-}
-
-export function superMode(filename: string): void {
+export const createTestLensProvider = (): CodeLensProvider => {
   const jestWorkspace: ProjectWorkspace = new ProjectWorkspace(
     resolve(__dirname, "../../"),
     resolve(__dirname, "../../node_modules/jest/bin/jest.js"),
@@ -51,10 +21,40 @@ export function superMode(filename: string): void {
     false
   );
 
-  const vimJest = new VimJest(jestWorkspace, (data: JestTotalResults) => {
-    // data.testResults.map(test: JestFileResults => {
-    //   test.asset
-    // })
-  });
+  const vimJest = new VimJest(jestWorkspace);
+  vimJest.handler = () => {};
+
   vimJest.startProcess();
+
+  return {
+    provideCodeLenses: (): Promise<CodeLens[]> => {
+      return new Promise(resolve => {
+        vimJest.handler = (data: JestTotalResults) => {
+          let codeLens = [];
+          data.testResults.forEach(objAssertionResults => {
+            objAssertionResults.assertionResults.forEach(test => {
+              codeLens.push({
+                command: { title: test.status, command: 'echo "bar"' },
+                range: {
+                  start: {
+                    line: test.location.line,
+                    character: test.location.column
+                  },
+                  end: {
+                    line: test.location.line,
+                    character: test.location.column
+                  }
+                }
+              })
+            })
+          });
+          vimJest.handle = () => {};
+          resolve(codeLens);
+        }
+      });
+    },
+    resolveCodeLens: (codeLens: CodeLens, token: CancellationToken): ProviderResult<CodeLens> => {
+      return Promise.resolve(codeLens)
+    }
+  }
 }

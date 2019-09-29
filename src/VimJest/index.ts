@@ -67,7 +67,7 @@ class VimJest {
 
   // private clearOnNextInput: boolean
   // private status: ReturnType<StatusBar['bind']>
-  private handler: Handler
+  public handler: Handler
 
   constructor(
     // context: vscode.ExtensionContext,
@@ -80,10 +80,10 @@ class VimJest {
     // workspaceFolder: vscode.WorkspaceFolder,
 
     jestWorkspace: ProjectWorkspace,
-    handler: Handler
+    // handler: Handler
   ) {
     this.jestWorkspace = jestWorkspace
-    this.handler = handler;
+    // this.handler = handler;
 
     // this.workspaceFolder = workspaceFolder
     // this.channel = outputChannel
@@ -139,17 +139,17 @@ class VimJest {
     // }
 
     this.jestProcess = this.jestProcessManager.startJestProcess({
-      watchMode: WatchMode.Watch,
+      watchMode: WatchMode.WatchAll,
       keepAlive: true,
       // exitCallback: (jestProcess, jestProcessInWatchMode) => {
       exitCallback: (_, jestProcessInWatchMode) => {
         if (jestProcessInWatchMode) {
-          this.jestProcess = jestProcessInWatchMode
+          this.jestProcess = jestProcessInWatchMode;
 
           // this.channel.appendLine('Finished running all tests. Starting watch mode.')
           // this.status.running('Starting watch mode')
 
-          // this.assignHandlers(this.jestProcess)
+          this.assignHandlers(this.jestProcess, this.handler);
         } else {
           // this.status.stopped()
           // if (!jestProcess.stopRequested()) {
@@ -430,26 +430,21 @@ class VimJest {
   private assignHandlers(jestProcess: JestProcess, handler: Handler) {
     jestProcess
       .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {
-        this.updateWithData(data)
+        this.handler(data);
         // addToOutput(JSON.stringify(data));
-        debugger
       })
       .onJestEditorSupportEvent('executableOutput', (output: string) => {
         addToOutput(output);
-        debugger
       })
       // .onJestEditorSupportEvent('executableStdErr', (error: Buffer) => this.handleStdErr(error))
       .onJestEditorSupportEvent('nonTerminalError', (error: string) => {
         addToOutput(error)
-        debugger
       })
       .onJestEditorSupportEvent('exception', result => {
         addToOutput(result);
-        debugger
       })
       .onJestEditorSupportEvent('terminalError', (error: string) => {
         addToOutput(error)
-        debugger
       })
     // jestProcess
     //   .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {

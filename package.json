@@ -115,6 +115,7 @@
   "dependencies": {
     "jest": "^24.9.0",
     "jest-editor-support": "26.0.0-beta",
+    "redux": "^4.0.4",
     "vscode-languageserver-protocol": "^3.14.1"
   }
 }

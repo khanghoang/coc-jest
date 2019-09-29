@@ -8,20 +8,19 @@ import {
 import path from 'path';
 import which from "which";
 import { findUp, existAsync } from "./util";
-import { superMode, TestCodeLensProvider } from "./superMode";
+import { createTestLensProvider } from "./superMode";
 import { setupErrorHandler } from "./addToOutput";
+import { createStore } from 'redux';
 
 let bufnr: number;
 let { nvim } = workspace;
 
+const store = createStore(r => r, {});
+
 export async function activate(context: ExtensionContext): Promise<void> {
   let { subscriptions } = context;
 
-  // subscriptions.push(commands.registerCommand('jest.init', initJest))
-  // subscriptions.push(commands.registerCommand('jest.projectTest', jestProject))
-  // subscriptions.push(commands.registerCommand('jest.fileTest', jestFile, null, true))
-  // subscriptions.push(commands.registerCommand('jest.singleTest', jestSingle))
-  subscriptions.push(commands.registerCommand("jest.superMode", superMode));
+  // subscriptions.push(commands.registerCommand("jest.superMode", superMode));
 
   const codeLensProviderDisposable = languages.registerCodeLensProvider(
     [
@@ -32,7 +31,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       { language: "javascript.jsx" },
       { language: "javascriptreact" }
     ],
-    new TestCodeLensProvider()
+    createTestLensProvider()
   );
 
   context.subscriptions.push(setupErrorHandler());
