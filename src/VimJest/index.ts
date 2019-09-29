@@ -22,7 +22,7 @@ import { pathToJest, pathToConfig } from '../helpers'
 import { JestProcess, JestProcessManager } from '../JestProcessManagement'
 // import { isWatchNotSupported, WatchMode } from '../Jest'
 import { WatchMode } from '../Jest'
-import {addToOutput} from '../Core/addToOutput';
+import { addToOutput } from '../Core/addToOutput';
 // import * as messaging from '../messaging'
 
 // interface InstanceSettings {
@@ -492,7 +492,6 @@ class VimJest {
   }
 
   private updateWithData(data: JestTotalResults) {
-    debugger;
     const normalizedData = resultsWithLowerCaseWindowsDriveLetters(data)
     // this.coverageMapProvider.update(normalizedData.coverageMap)
 
