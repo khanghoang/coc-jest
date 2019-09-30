@@ -30,7 +30,7 @@ In your vim/neovim, run the command:
 
 ## Configuration
 
-- `inlineJjest.enabled`: Enable or disable the plugin, default is `true`.
+- `inlineJest.enabled`: Enable or disable the plugin, default is `true`.
 - `inlineJest.pathToJest`: Path to Jest binary, default `./node_modules/.bin/jest`.
 - `inlineJest.pathToConfig`: Path to Jest config file, default `./jest.config.js`.
 - `inlineJest.pathToRoot`: Path to project root, default `./`.
