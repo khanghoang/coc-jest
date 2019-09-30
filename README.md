@@ -2,6 +2,8 @@
 
 Best Jest plugin for [coc.nvim](https://github.com/khanghoang/coc.nvim).
 
+<img src="https://github.com/khanghoang/coc-jest/raw/master/coc-jest.gif" alt="Screenshot of the tool" width="100%">
+
 ## Features
 
 * [x] Starts Jest automatically when you're in a root folder project with Jest installed.
