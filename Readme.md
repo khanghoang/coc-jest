@@ -1,4 +1,4 @@
-# inline-coc-jest
+# coc-inline-jest
 
 Best Jest plugin for [coc.nvim](https://github.com/khanghoang/coc.nvim).
 
