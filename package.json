@@ -5,9 +5,9 @@
   "main": "lib/Core/index.js",
   "scripts": {
     "clean": "rimraf lib",
-    "build": "webpack",
+    "build": "webpack --silent || exit 0",
     "prepare": "npx npm-run-all clean build",
-    "dev": "webpack --watch || exit 0"
+    "dev": "webpack --watch"
   },
   "engines": {
     "coc": ">=0.0.23"
