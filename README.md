@@ -2,7 +2,7 @@
 
 Best Jest plugin for [coc.nvim](https://github.com/khanghoang/coc.nvim).
 
-<img src="https://github.com/khanghoang/coc-jest/raw/master/coc-jest.gif" alt="Screenshot of the tool" width="100%">
+<img src="https://github.com/khanghoang/coc-jest/raw/master/coc-jest-demo.gif" alt="Screenshot of the tool" width="100%">
 
 ## Features
 
