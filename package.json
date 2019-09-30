@@ -1,7 +1,7 @@
 {
-  "name": "coc-jest",
-  "version": "1.0.3",
-  "description": "jest extension for coc.nvim",
+  "name": "coc-inline-jest",
+  "version": "0.0.1",
+  "description": "Like VSCode-Jest, but for vim",
   "main": "lib/Core/index.js",
   "scripts": {
     "clean": "rimraf lib",
@@ -15,18 +15,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neoclide/coc-jest.git"
+    "url": "git+https://github.com/khanghoang/coc-jest.git"
   },
   "keywords": [
     "coc.nvim",
     "jest"
   ],
-  "author": "chemzqm@gmail.com",
+  "author": "hoangtrieukhang@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/neoclide/coc-jest/issues"
+    "url": "https://github.com/khanghoang/coc-jest/issues"
   },
-  "homepage": "https://github.com/neoclide/coc-jest#readme",
+  "homepage": "https://github.com/khanghoang/coc-jest#readme",
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
@@ -50,51 +50,29 @@
             "right"
           ]
         },
-        "jest.watch": {
+        "jest.enabled": {
           "type": "boolean",
           "default": true
         },
-        "jest.detectLeaks": {
-          "type": "boolean",
-          "default": false
-        },
-        "jest.watchman": {
-          "type": "boolean",
-          "default": false
-        },
-        "jest.detectOpenHandles": {
-          "type": "boolean",
-          "default": false
-        },
-        "jest.forceExit": {
-          "type": "boolean",
-          "default": false
-        },
-        "jest.noStackTrace": {
-          "type": "boolean",
-          "default": false
-        },
-        "jest.configFileName": {
+        "jest.pathToConfig": {
           "type": "string",
-          "default": "jest.config.js"
+          "default": "./jest.config.js"
+        },
+        "jest.pathToJest": {
+          "type": "string",
+          "default": "./node_modules/.bin/jest"
+        },
+        "jest.pathToRoot": {
+          "type": "string",
+          "default": "./"
         }
       }
     },
     "commands": [
       {
-        "title": "Run jest for current project.",
+        "title": "Toggle Jest Inline",
         "category": "Jest",
-        "command": "jest.projectTest"
-      },
-      {
-        "title": "Run jest for current file",
-        "category": "Jest",
-        "command": "jest.fileTest"
-      },
-      {
-        "title": "Run jest init in current vim's CWD",
-        "category": "Jest",
-        "command": "jest.init"
+        "command": "inlineJest.toggle"
       }
     ]
   },

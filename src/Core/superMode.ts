@@ -19,6 +19,7 @@ interface Settings {
 }
 
 export const createTestLensProvider = async (): CodeLensProvider => {
+  debugger;
   const root = await resolveRoot();
   const jest = await resolveJest();
   const configFile = await resolveConfigFile();
