@@ -22,7 +22,6 @@ export const createTestLensProvider = async (): CodeLensProvider => {
   const root = await resolveRoot();
   const jest = await resolveJest();
   const configFile = await resolveConfigFile();
-  debugger;
   const jestWorkspace: ProjectWorkspace = new ProjectWorkspace(
     root,
     jest,
