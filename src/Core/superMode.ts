@@ -6,7 +6,6 @@ import {
   Range
 } from "vscode-languageserver-protocol";
 import { workspace, CodeLensProvider, diagnosticManager } from "coc.nvim";
-import { resolve } from "path";
 import { VimJest } from '../VimJest'
 import {resolveRoot} from '../resolveRoot';
 import {resolveJest} from '../resolveJest';
@@ -19,7 +18,6 @@ interface Settings {
 }
 
 export const createTestLensProvider = async (): CodeLensProvider => {
-  debugger;
   const root = await resolveRoot();
   const jest = await resolveJest();
   const configFile = await resolveConfigFile();
@@ -75,9 +73,6 @@ export const createTestLensProvider = async (): CodeLensProvider => {
           resolve(codeLens);
         }
       });
-    },
-    resolveCodeLens: (codeLens: CodeLens, token: CancellationToken): ProviderResult<CodeLens> => {
-      return Promise.resolve(codeLens)
     }
   }
 }
