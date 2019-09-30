@@ -432,19 +432,24 @@ class VimJest {
       .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {
         this.handler(data);
         // addToOutput(JSON.stringify(data));
+        debugger;
       })
       .onJestEditorSupportEvent('executableOutput', (output: string) => {
         addToOutput(output);
+        debugger;
       })
       // .onJestEditorSupportEvent('executableStdErr', (error: Buffer) => this.handleStdErr(error))
       .onJestEditorSupportEvent('nonTerminalError', (error: string) => {
         addToOutput(error)
+        debugger;
       })
       .onJestEditorSupportEvent('exception', result => {
         addToOutput(result);
+        debugger;
       })
       .onJestEditorSupportEvent('terminalError', (error: string) => {
         addToOutput(error)
+        debugger;
       })
     // jestProcess
     //   .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {

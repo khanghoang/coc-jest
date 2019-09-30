@@ -31,7 +31,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       { language: "javascript.jsx" },
       { language: "javascriptreact" }
     ],
-    createTestLensProvider()
+    await createTestLensProvider()
   );
 
   context.subscriptions.push(setupErrorHandler());
@@ -129,12 +129,9 @@ async function runJestCommand(cwd: string, cmd: string): Promise<void> {
 async function resolveConfig(): Promise<string> {
   let args = [];
   let names = [
-    "watch",
-    "detectLeaks",
-    "watchman",
-    "detectOpenHandles",
-    "forceExit",
-    "noStackTrace"
+    "enabled",
+    "pathToJest",
+    "pathToConfig"
   ];
   let document = await workspace.document;
   let config = workspace.getConfiguration(

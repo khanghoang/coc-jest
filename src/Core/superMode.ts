@@ -5,20 +5,35 @@ import {
   Diagnostic,
   Range
 } from "vscode-languageserver-protocol";
-import { CodeLensProvider, diagnosticManager } from "coc.nvim";
+import { workspace, CodeLensProvider, diagnosticManager } from "coc.nvim";
 import { resolve } from "path";
 import { VimJest } from '../VimJest'
+import {resolveRoot} from '../resolveRoot';
+import {resolveJest} from '../resolveJest';
+import {resolveConfigFile} from '../resolveConfigFile';
 
-export const createTestLensProvider = (): CodeLensProvider => {
+interface Settings {
+  enabled?: boolean,
+  pathToJest?: string,
+  pathToConfig?: string
+}
+
+export const createTestLensProvider = async (): CodeLensProvider => {
+  const root = await resolveRoot();
+  const jest = await resolveJest();
+  const configFile = await resolveConfigFile();
+  debugger;
   const jestWorkspace: ProjectWorkspace = new ProjectWorkspace(
-    resolve(__dirname, "../../"),
-    resolve(__dirname, "../../node_modules/jest/bin/jest.js"),
-    resolve(__dirname, "../../jest.config.js"),
+    root,
+    jest,
+    configFile,
     20,
-    "foo",
+    "jest",
     null,
     false
   );
+
+  const config = workspace.getConfiguration().get<any>('jest', {}) as Settings
 
   const vimJest = new VimJest(jestWorkspace);
   vimJest.handler = () => {

@@ -1,11 +1,12 @@
 describe('test', () => {
   it('should pass', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(false);
   });
   it('should pass', () => {
     expect(true).toBe(true);
   });
-  it('should pass', () => {
-    expect(1).toBe(3);
-  });
+});
+
+test('test', () => {
+  expect(1).toBe(0);
 });
