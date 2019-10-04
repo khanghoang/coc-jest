@@ -11,5 +11,9 @@ export async function resolveConfigFile(): Promise<string> {
   let filename = config.get<string>("configFileName") || 'jest.config.js';
   let u = Uri.parse(document.uri);
   let cwd = u.scheme == "file" ? path.dirname(u.fsPath) : workspace.cwd;
-  return path.join(await findUp([filename], cwd), filename);
+  const configFileFound = await findUp([filename], cwd);
+  if (!configFileFound) {
+    return null;
+  }
+  return path.join(configFileFound, filename);
 }
