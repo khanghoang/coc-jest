@@ -12,7 +12,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       { language: "typescriptreact" },
       { language: "javascript" },
       { language: "javascript.jsx" },
-      { language: "javascriptreact" }
+      git@github.com:iamkaiwei/coc-jest.git
     ],
 
     await createTestLensProvider()
