@@ -10,7 +10,8 @@ Best Jest plugin for [coc.nvim](https://github.com/khanghoang/coc.nvim).
 * [x] Display failed test cases on gitter.
 * [x] Highlights the errors next to the expect functions.
 * [x] Navigate between list of failed test cases. (Using :CocList diagnostics)
-* [ ] Customize icons.
+* [x] Work with Create React App out-of-the-box.
+* [ ] Customized icons.
 * [ ] Display passed test cases on gitter.
 * [ ] Zero configuration.
 * [ ] A one button update for failed snapshots.
