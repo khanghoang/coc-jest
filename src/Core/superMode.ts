@@ -47,7 +47,6 @@ export const createTestLensProvider = async (): CodeLensProvider => {
       return new Promise(resolve => {
         vimJest.handler = (data: JestTotalResults) => {
           let codeLens = [];
-          debugger;
           data.testResults.forEach(objAssertionResults => {
             const uri = 'file://' + objAssertionResults.name;
             let diagnostics = [];
