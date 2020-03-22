@@ -47,10 +47,11 @@ export const createTestLensProvider = async (): CodeLensProvider => {
       return new Promise(resolve => {
         vimJest.handler = (data: JestTotalResults) => {
           let codeLens = [];
-          let diagnostics = [];
-          let uri = doc.uri;
-          collection.set(uri, []);
+          debugger;
           data.testResults.forEach(objAssertionResults => {
+            const uri = 'file://' + objAssertionResults.name;
+            let diagnostics = [];
+            collection.set(uri, []);
             objAssertionResults.assertionResults.forEach(test => {
               if (test.status === 'failed') {
                 const range = {
@@ -67,8 +68,8 @@ export const createTestLensProvider = async (): CodeLensProvider => {
                 diagnostics.push(diagnostic);
               }
             })
+            collection.set(uri, diagnostics)
           });
-          collection.set(uri, diagnostics)
           vimJest.handler = () => {};
           resolve(codeLens);
         }
