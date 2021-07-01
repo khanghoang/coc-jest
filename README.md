@@ -6,16 +6,16 @@ Best Jest plugin for [coc.nvim](https://github.com/khanghoang/coc.nvim).
 
 ## Features
 
-* [x] Starts Jest automatically when you're in a root folder project with Jest installed.
-* [x] Display failed test cases on gitter.
-* [x] Highlights the errors next to the expect functions.
-* [x] Navigate between list of failed test cases. (Using :CocList diagnostics)
-* [x] Work with Create React App out-of-the-box.
-* [ ] Customized icons.
-* [ ] Display passed test cases on gitter.
-* [ ] Zero configuration.
-* [ ] A one button update for failed snapshots.
-* [ ] Show coverage information in files being tested. (requires coverage to be collected by your jest config)
+- [x] Starts Jest automatically when you're in a root folder project with Jest installed.
+- [x] Display failed test cases on gutter.
+- [x] Highlights the errors next to the expect functions.
+- [x] Navigate between list of failed test cases. (Using :CocList diagnostics)
+- [x] Work with Create React App out-of-the-box.
+- [x] Display passed test cases on gitter.
+- [ ] Customized icons.
+- [ ] Zero configuration.
+- [ ] A one button update for failed snapshots.
+- [ ] Show coverage information in files being tested. (requires coverage to be collected by your jest config)
 
 ## Installation
 

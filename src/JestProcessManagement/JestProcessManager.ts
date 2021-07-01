@@ -1,22 +1,24 @@
-import { ProjectWorkspace } from 'jest-editor-support'
-import { JestProcess } from './JestProcess'
-import { WatchMode } from '../Jest'
+import { ProjectWorkspace } from "jest-editor-support";
+import { JestProcess } from "./JestProcess";
+import { WatchMode } from "../Jest";
 
-export type ExitCallback = (exitedJestProcess: JestProcess, jestProcessInWatchMode?: JestProcess) => void
+export type ExitCallback = (
+  exitedJestProcess: JestProcess,
+  jestProcessInWatchMode?: JestProcess
+) => void;
 
 export class JestProcessManager {
-  private projectWorkspace: ProjectWorkspace
-  private jestProcesses: JestProcess[] = []
-  private runAllTestsFirstInWatchMode: boolean
+  private projectWorkspace: ProjectWorkspace;
+  private jestProcesses: JestProcess[] = [];
+  private runAllTestsFirstInWatchMode: boolean;
 
   constructor({
     projectWorkspace,
-    runAllTestsFirstInWatchMode = true,
   }: {
-    projectWorkspace: ProjectWorkspace
-    runAllTestsFirstInWatchMode?: boolean
+    projectWorkspace: ProjectWorkspace;
+    runAllTestsFirstInWatchMode?: boolean;
   }) {
-    this.projectWorkspace = projectWorkspace
+    this.projectWorkspace = projectWorkspace;
   }
 
   public startJestProcess({
@@ -24,25 +26,25 @@ export class JestProcessManager {
     watchMode = WatchMode.None,
     keepAlive = false,
   }: {
-    exitCallback?: ExitCallback
-    watchMode?: WatchMode
-    keepAlive?: boolean
+    exitCallback?: ExitCallback;
+    watchMode?: WatchMode;
+    keepAlive?: boolean;
   } = {}): JestProcess {
     if (watchMode !== WatchMode.None && this.runAllTestsFirstInWatchMode) {
-      return this.runAllTestsFirst(exitedJestProcess => {
+      return this.runAllTestsFirst((exitedJestProcess) => {
         const jestProcessInWatchMode = this.run({
           watchMode: WatchMode.Watch,
           keepAlive,
           exitCallback,
-        })
-        exitCallback(exitedJestProcess, jestProcessInWatchMode)
-      })
+        });
+        exitCallback(exitedJestProcess, jestProcessInWatchMode);
+      });
     } else {
       return this.run({
         watchMode,
         keepAlive,
         exitCallback,
-      })
+      });
     }
   }
 
@@ -51,38 +53,37 @@ export class JestProcessManager {
     keepAlive,
     exitCallback,
   }: {
-    watchMode: WatchMode
-    keepAlive: boolean
-    exitCallback: ExitCallback
+    watchMode: WatchMode;
+    keepAlive: boolean;
+    exitCallback: ExitCallback;
   }) {
     const jestProcess = new JestProcess({
       projectWorkspace: this.projectWorkspace,
       watchMode,
       keepAlive,
-    })
+    });
 
-    this.jestProcesses.unshift(jestProcess)
+    this.jestProcesses.unshift(jestProcess);
 
-    jestProcess.onExit(exitCallback)
-    return jestProcess
+    jestProcess.onExit(exitCallback);
+    return jestProcess;
   }
 
   private run({
     watchMode,
     keepAlive,
-    exitCallback,
   }: {
-    watchMode: WatchMode
-    keepAlive: boolean
-    exitCallback: ExitCallback
+    watchMode: WatchMode;
+    keepAlive: boolean;
+    exitCallback: ExitCallback;
   }) {
     return this.runJest({
       watchMode,
       keepAlive,
-      exitCallback: (exitedJestProcess: JestProcess) => {
+      exitCallback: () => {
         // noop
       },
-    })
+    });
   }
 
   private runAllTestsFirst(onExit: ExitCallback) {
@@ -90,6 +91,6 @@ export class JestProcessManager {
       watchMode: WatchMode.None,
       keepAlive: false,
       exitCallback: onExit,
-    })
+    });
   }
 }

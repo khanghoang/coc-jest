@@ -1,6 +1,6 @@
-import { workspace } from "coc.nvim";
+import { workspace, OutputChannel } from "coc.nvim";
 
-let logChannel;
+let logChannel: OutputChannel | undefined;
 
 export const createLogChannel = () => {
   logChannel = workspace.createOutputChannel("inline-jest");

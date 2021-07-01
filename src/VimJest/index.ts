@@ -1,28 +1,31 @@
-import { ProjectWorkspace, JestTotalResults } from 'jest-editor-support'
-import {
-  TestResultProvider
-} from '../TestResults'
-import { JestProcess, JestProcessManager } from '../JestProcessManagement'
-import { WatchMode } from '../Jest'
-type Handler = (data: JestTotalResults) => void
+import { ProjectWorkspace, JestTotalResults } from "jest-editor-support";
+import { TestResultProvider } from "../TestResults";
+import { getLogChannel } from "../Log";
+import { workspace, StatusBarItem } from "coc.nvim";
+import { JestProcess, JestProcessManager } from "../JestProcessManagement";
+import { WatchMode } from "../Jest";
+type Handler = (data: JestTotalResults) => void;
 
 class VimJest {
-  public testResultProvider: TestResultProvider
-  private jestWorkspace: ProjectWorkspace
-  private jestProcessManager: JestProcessManager
-  private jestProcess: JestProcess
-  public handler: Handler
+  public testResultProvider: TestResultProvider;
+  private jestProcessManager: JestProcessManager;
+  private jestProcess: JestProcess;
+  private testRunInProgressStatusMessage: StatusBarItem;
+  public handler: Handler;
+  private dataQueue: JestTotalResults[] = [];
 
-  constructor(
-    jestWorkspace: ProjectWorkspace,
-  ) {
-    this.jestWorkspace = jestWorkspace
-    this.testResultProvider = new TestResultProvider(false)
+  constructor(jestWorkspace: ProjectWorkspace) {
+    this.testResultProvider = new TestResultProvider(false);
 
     this.jestProcessManager = new JestProcessManager({
       projectWorkspace: jestWorkspace,
       runAllTestsFirstInWatchMode: true,
-    })
+    });
+    this.testRunInProgressStatusMessage = workspace.createStatusBarItem(9999, {
+      progress: true,
+    });
+    this.testRunInProgressStatusMessage.text = "Running tests";
+    this.testRunInProgressStatusMessage.show();
   }
 
   public startProcess(): void {
@@ -32,37 +35,46 @@ class VimJest {
       exitCallback: (_, jestProcessInWatchMode) => {
         if (jestProcessInWatchMode) {
           this.jestProcess = jestProcessInWatchMode;
-          this.assignHandlers(this.jestProcess, this.handler);
+          this.assignHandlers(this.jestProcess);
         } else {
           // noop
         }
       },
-    })
+    });
 
-    this.assignHandlers(this.jestProcess, this.handler)
+    this.assignHandlers(this.jestProcess);
   }
 
-  private assignHandlers(jestProcess: JestProcess, handler: Handler) : void {
+  public clearDataQueue() {
+    const nextItem = this.dataQueue.shift();
+    if (nextItem) {
+      this.handler(nextItem);
+      this.clearDataQueue();
+    }
+  }
+
+  private assignHandlers(jestProcess: JestProcess): void {
     jestProcess
-    .onJestEditorSupportEvent('executableJSON', (data: JestTotalResults) => {
-      this.handler(data);
-    })
-    .onJestEditorSupportEvent('executableOutput', (output: string) => {
-      // noop
-    })
-    .onJestEditorSupportEvent('executableStdErr', (error: Buffer) => {
-      // noop
-    })
-    .onJestEditorSupportEvent('nonTerminalError', (error: string) => {
-      // noop
-    })
-    .onJestEditorSupportEvent('exception', result => {
-      // noop
-    })
-    .onJestEditorSupportEvent('terminalError', (error: string) => {
-      // noop
-    })
+      .onJestEditorSupportEvent("executableJSON", (data: JestTotalResults) => {
+        if (this.handler) {
+          this.handler(data);
+        } else {
+          this.dataQueue.push(data);
+        }
+        this.testRunInProgressStatusMessage.hide();
+      })
+      .onJestEditorSupportEvent("executableOutput", () => {
+        // noop
+      })
+      .onJestEditorSupportEvent("executableStdErr", () => {
+        this.testRunInProgressStatusMessage.text =
+          "Change detected, re-running tests";
+        this.testRunInProgressStatusMessage.show();
+      })
+      .onJestEditorSupportEvent("terminalError", () => {
+        // noop
+      });
   }
 }
 
-export { VimJest }
+export { VimJest };
