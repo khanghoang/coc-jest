@@ -59,9 +59,6 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
   );
 
   const vimJest = new VimJest(jestWorkspace);
-  vimJest.handler = () => {
-    // noop
-  };
 
   let collection = diagnosticManager.create("test");
 
@@ -119,16 +116,13 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
             allResultsForSignManager[uri] = signManagerResults;
             collection.set(uri, diagnostics);
           });
-          vimJest.handler = () => {};
-          resolve(codeLens);
+          log.appendLine("End of code lense");
           await signs.storeNewTestResults(allResultsForSignManager);
-
-          await Promise.all(
-            workspace.documents
-              .filter((document) => !document.buftype)
-              .map(signs.updateBufferResults.bind(signs))
-          );
+          await signs.updateAllBufferResults();
+          log.appendLine(JSON.stringify(allResultsForSignManager, null, 2));
+          resolve(codeLens);
         };
+        vimJest.clearDataQueue();
       });
     },
   };

@@ -12,6 +12,7 @@ class VimJest {
   private jestProcess: JestProcess;
   private testRunInProgressStatusMessage: StatusBarItem;
   public handler: Handler;
+  private dataQueue: JestTotalResults[] = [];
 
   constructor(jestWorkspace: ProjectWorkspace) {
     this.testResultProvider = new TestResultProvider(false);
@@ -44,10 +45,18 @@ class VimJest {
     this.assignHandlers(this.jestProcess);
   }
 
+  public clearDataQueue() {
+    this.dataQueue.forEach(this.handler.bind(this));
+  }
+
   private assignHandlers(jestProcess: JestProcess): void {
     jestProcess
       .onJestEditorSupportEvent("executableJSON", (data: JestTotalResults) => {
-        this.handler(data);
+        if (this.handler) {
+          this.handler(data);
+        } else {
+          this.dataQueue.push(data);
+        }
         this.testRunInProgressStatusMessage.hide();
       })
       .onJestEditorSupportEvent("executableOutput", () => {

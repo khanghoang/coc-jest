@@ -33,7 +33,7 @@ export class JestProcessManager {
     if (watchMode !== WatchMode.None && this.runAllTestsFirstInWatchMode) {
       return this.runAllTestsFirst((exitedJestProcess) => {
         const jestProcessInWatchMode = this.run({
-          watchMode: WatchMode.Watch,
+          watchMode: WatchMode.WatchAll,
           keepAlive,
           exitCallback,
         });

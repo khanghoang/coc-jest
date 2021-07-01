@@ -33,9 +33,14 @@ export default class SignManager {
 
   registerDocumentChangeListener() {
     const log = getLogChannel();
+
+    workspace.onDidOpenTextDocument(async () => {
+      log.appendLine(`Open text document detected, updating test results`);
+      await this.updateAllBufferResults();
+    });
     events.on("BufEnter", async () => {
-      log.appendLine(`BufEnter detected - updating test results`);
-      await this.updateCurrentBufferResults();
+      log.appendLine(`BufEnter detected, updating test results`);
+      await this.updateAllBufferResults();
     });
   }
 
@@ -81,10 +86,10 @@ export default class SignManager {
 
   async storeNewTestResults(results: AllResults) {
     this.allResults = { ...results };
-    await this.updateCurrentBufferResults();
+    this.updateAllBufferResults();
   }
 
-  async updateBufferResults(document: Document) {
+  private async updateBufferResults(document: Document) {
     const { uri, bufnr: bufferNumber } = document;
     const log = getLogChannel();
 
@@ -120,11 +125,17 @@ export default class SignManager {
       this.nvim.call("sign_place", args, true);
       log.appendLine(`Place complete`);
     });
-
-    await this.nvim.resumeNotification();
   }
 
-  async updateCurrentBufferResults() {
-    return this.updateBufferResults(await workspace.document);
+  async updateAllBufferResults() {
+    this.nvim.pauseNotification();
+
+    await Promise.all(
+      workspace.documents
+        .filter((document) => !document.buftype)
+        .map(this.updateBufferResults.bind(this))
+    );
+
+    await this.nvim.resumeNotification();
   }
 }
