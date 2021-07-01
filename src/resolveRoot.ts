@@ -1,6 +1,6 @@
-import {Uri, workspace} from 'coc.nvim';
-import path from 'path';
-import {findUp} from './Core/util';
+import { Uri, workspace } from "coc.nvim";
+import path from "path";
+import { findUp } from "./Core/util";
 
 export async function resolveRoot(): Promise<string> {
   let document = await workspace.document;

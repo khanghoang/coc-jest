@@ -1,6 +1,6 @@
-import {Uri, workspace} from 'coc.nvim';
-import path from 'path';
-import {findUp} from './Core/util';
+import { Uri, workspace } from "coc.nvim";
+import path from "path";
+import { findUp } from "./Core/util";
 
 export async function resolveConfigFile(): Promise<string> {
   let document = await workspace.document;
@@ -8,7 +8,7 @@ export async function resolveConfigFile(): Promise<string> {
     "jest",
     document ? document.uri : undefined
   );
-  let filename = config.get<string>("configFileName") || 'jest.config.js';
+  let filename = config.get<string>("configFileName") || "jest.config.js";
   let u = Uri.parse(document.uri);
   let cwd = u.scheme == "file" ? path.dirname(u.fsPath) : workspace.cwd;
   const configFileFound = await findUp([filename], cwd);

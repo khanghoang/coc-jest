@@ -1,9 +1,6 @@
-import {
-  languages,
-  ExtensionContext,
-} from "coc.nvim";
+import { languages, ExtensionContext } from "coc.nvim";
 import { createTestLensProvider } from "./superMode";
-import { createLogChannel } from '../Log';
+import { createLogChannel } from "../Log";
 
 export async function activate(context: ExtensionContext): Promise<void> {
   let { subscriptions } = context;
@@ -16,14 +13,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
       { language: "typescriptreact" },
       { language: "javascript" },
       { language: "javascript.jsx" },
-      { language: "javascriptreact" }
+      { language: "javascriptreact" },
     ],
 
     await createTestLensProvider()
   );
 
   subscriptions.push(logChannel);
-  logChannel.append('test test test inline guest ')
+  logChannel.append("test test test inline guest ");
 
   subscriptions.push(codeLensProviderDisposable);
 }
