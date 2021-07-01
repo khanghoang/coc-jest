@@ -1,27 +1,24 @@
 import {
   ProjectWorkspace,
   JestTotalResults,
-  JestFileResults,
+  JestAssertionResults,
+  Location,
 } from "jest-editor-support";
-import {
-  CodeLens,
-  CancellationToken,
-  Diagnostic,
-  Range,
-} from "vscode-languageserver-protocol";
-import { workspace, CodeLensProvider, diagnosticManager } from "coc.nvim";
+import { CodeLens } from "vscode-languageserver-protocol";
+import { CodeLensProvider, diagnosticManager } from "coc.nvim";
 import { VimJest } from "../VimJest";
 import { resolveRoot } from "../resolveRoot";
 import { resolveJest } from "../resolveJest";
 import { resolveConfigFile } from "../resolveConfigFile";
 
-interface Settings {
-  enabled?: boolean;
-  pathToJest?: string;
-  pathToConfig?: string;
-}
+type AssertResultsWithLocation = JestAssertionResults & { location: Location };
 
-export const createTestLensProvider = async (): CodeLensProvider => {
+const hasLocationInfo = (
+  results: JestAssertionResults
+): results is AssertResultsWithLocation =>
+  typeof (results as AssertResultsWithLocation).location === "object";
+
+export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
   const root = await resolveRoot();
   const jest = await resolveJest();
   const configFile = await resolveConfigFile();
@@ -35,8 +32,6 @@ export const createTestLensProvider = async (): CodeLensProvider => {
     false
   );
 
-  const config = workspace.getConfiguration().get<any>("jest", {}) as Settings;
-
   const vimJest = new VimJest(jestWorkspace);
   vimJest.handler = () => {
     // noop
@@ -47,7 +42,7 @@ export const createTestLensProvider = async (): CodeLensProvider => {
   vimJest.startProcess();
 
   return {
-    provideCodeLenses: (doc): Promise<CodeLens[]> => {
+    provideCodeLenses: (): Promise<CodeLens[]> => {
       return new Promise((resolve) => {
         vimJest.handler = (data: JestTotalResults) => {
           let codeLens = [];
@@ -56,7 +51,7 @@ export const createTestLensProvider = async (): CodeLensProvider => {
             let diagnostics = [];
             collection.set(uri, []);
             objAssertionResults.assertionResults.forEach((test) => {
-              if (test.status === "failed") {
+              if (test.status === "failed" && hasLocationInfo(test)) {
                 const range = {
                   start: {
                     line: test.location.line,

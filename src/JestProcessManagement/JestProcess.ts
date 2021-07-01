@@ -1,5 +1,10 @@
 import { platform } from "os";
-import { Runner, ProjectWorkspace } from "jest-editor-support";
+import {
+  Runner,
+  ProjectWorkspace,
+  RunnerEvent,
+  DeprecatedRunnerEvent,
+} from "jest-editor-support";
 import { WatchMode } from "../Jest";
 import { ExitCallback } from "./JestProcessManager";
 
@@ -11,7 +16,10 @@ export class JestProcess {
   private runner: Runner;
   private projectWorkspace: ProjectWorkspace;
   private onExitCallback: ExitCallback;
-  private jestSupportEvents: Map<string, (...args: any[]) => void>;
+  private jestSupportEvents: Map<
+    RunnerEvent | DeprecatedRunnerEvent,
+    (...args: any[]) => void
+  >;
   private stopResolveCallback: () => void | null;
   private keepAliveCounter: number;
 
@@ -38,7 +46,7 @@ export class JestProcess {
   }
 
   public onJestEditorSupportEvent(
-    event: string,
+    event: RunnerEvent | DeprecatedRunnerEvent,
     callback: (...args: any[]) => void
   ) {
     this.jestSupportEvents.set(event, callback);

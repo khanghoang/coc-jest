@@ -14,7 +14,6 @@ export class JestProcessManager {
 
   constructor({
     projectWorkspace,
-    runAllTestsFirstInWatchMode = true,
   }: {
     projectWorkspace: ProjectWorkspace;
     runAllTestsFirstInWatchMode?: boolean;
@@ -73,7 +72,6 @@ export class JestProcessManager {
   private run({
     watchMode,
     keepAlive,
-    exitCallback,
   }: {
     watchMode: WatchMode;
     keepAlive: boolean;
@@ -82,7 +80,7 @@ export class JestProcessManager {
     return this.runJest({
       watchMode,
       keepAlive,
-      exitCallback: (exitedJestProcess: JestProcess) => {
+      exitCallback: () => {
         // noop
       },
     });

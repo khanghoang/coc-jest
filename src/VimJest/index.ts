@@ -6,13 +6,11 @@ type Handler = (data: JestTotalResults) => void;
 
 class VimJest {
   public testResultProvider: TestResultProvider;
-  private jestWorkspace: ProjectWorkspace;
   private jestProcessManager: JestProcessManager;
   private jestProcess: JestProcess;
   public handler: Handler;
 
   constructor(jestWorkspace: ProjectWorkspace) {
-    this.jestWorkspace = jestWorkspace;
     this.testResultProvider = new TestResultProvider(false);
 
     this.jestProcessManager = new JestProcessManager({
@@ -28,34 +26,28 @@ class VimJest {
       exitCallback: (_, jestProcessInWatchMode) => {
         if (jestProcessInWatchMode) {
           this.jestProcess = jestProcessInWatchMode;
-          this.assignHandlers(this.jestProcess, this.handler);
+          this.assignHandlers(this.jestProcess);
         } else {
           // noop
         }
       },
     });
 
-    this.assignHandlers(this.jestProcess, this.handler);
+    this.assignHandlers(this.jestProcess);
   }
 
-  private assignHandlers(jestProcess: JestProcess, handler: Handler): void {
+  private assignHandlers(jestProcess: JestProcess): void {
     jestProcess
       .onJestEditorSupportEvent("executableJSON", (data: JestTotalResults) => {
         this.handler(data);
       })
-      .onJestEditorSupportEvent("executableOutput", (output: string) => {
+      .onJestEditorSupportEvent("executableOutput", () => {
         // noop
       })
-      .onJestEditorSupportEvent("executableStdErr", (error: Buffer) => {
+      .onJestEditorSupportEvent("executableStdErr", () => {
         // noop
       })
-      .onJestEditorSupportEvent("nonTerminalError", (error: string) => {
-        // noop
-      })
-      .onJestEditorSupportEvent("exception", (result) => {
-        // noop
-      })
-      .onJestEditorSupportEvent("terminalError", (error: string) => {
+      .onJestEditorSupportEvent("terminalError", () => {
         // noop
       });
   }

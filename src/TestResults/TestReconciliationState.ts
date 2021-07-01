@@ -1,5 +1,6 @@
 export type TestReconciliationState =
   | "Unknown"
+  | "KnownTodo"
   | "KnownSuccess"
   | "KnownFail"
   | "KnownSkip";

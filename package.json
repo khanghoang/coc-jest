@@ -6,8 +6,9 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "webpack --silent || exit 0",
+    "check:types": "tsc",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "prepare": "yarn clean && yarn build",
+    "prepare": "yarn clean && yarn build && yarn check:types",
     "dev": "webpack --watch"
   },
   "engines": {
@@ -91,7 +92,7 @@
   },
   "dependencies": {
     "jest": "^24.9.0",
-    "jest-editor-support": "26.0.0-beta",
+    "jest-editor-support": "29.0.0",
     "js-yaml": "^3.13.1",
     "mixin-deep": "^2.0.1",
     "prettier": "^2.3.2",

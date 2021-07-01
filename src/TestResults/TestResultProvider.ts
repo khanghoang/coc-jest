@@ -52,7 +52,7 @@ export class TestResultProvider {
       test: ItBlock,
       assertion?: TestAssertionStatus,
       err?: string
-    ) => ({
+    ): TestResult => ({
       // Note the shift from one-based to zero-based line number and columns
       name: test.name,
       start: {
