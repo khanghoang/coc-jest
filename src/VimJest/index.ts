@@ -46,7 +46,11 @@ class VimJest {
   }
 
   public clearDataQueue() {
-    this.dataQueue.forEach(this.handler.bind(this));
+    const nextItem = this.dataQueue.shift();
+    if (nextItem) {
+      this.handler(nextItem);
+      this.clearDataQueue();
+    }
   }
 
   private assignHandlers(jestProcess: JestProcess): void {

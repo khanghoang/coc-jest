@@ -116,7 +116,6 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
             allResultsForSignManager[uri] = signManagerResults;
             collection.set(uri, diagnostics);
           });
-          log.appendLine("End of code lense");
           await signs.storeNewTestResults(allResultsForSignManager);
           await signs.updateAllBufferResults();
           log.appendLine(JSON.stringify(allResultsForSignManager, null, 2));
