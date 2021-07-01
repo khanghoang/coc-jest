@@ -122,6 +122,12 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
           vimJest.handler = () => {};
           resolve(codeLens);
           await signs.storeNewTestResults(allResultsForSignManager);
+
+          await Promise.all(
+            workspace.documents
+              .filter((document) => !document.buftype)
+              .map(signs.updateBufferResults.bind(signs))
+          );
         };
       });
     },

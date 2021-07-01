@@ -1,4 +1,10 @@
-import { workspace, Neovim, WorkspaceConfiguration, events } from "coc.nvim";
+import {
+  Document,
+  workspace,
+  Neovim,
+  WorkspaceConfiguration,
+  events,
+} from "coc.nvim";
 import semver from "semver";
 import { getLogChannel } from "./Log";
 
@@ -78,8 +84,8 @@ export default class SignManager {
     await this.updateCurrentBufferResults();
   }
 
-  async updateCurrentBufferResults() {
-    const { bufnr: bufferNumber, uri } = await workspace.document;
+  async updateBufferResults(document: Document) {
+    const { uri, bufnr: bufferNumber } = document;
     const log = getLogChannel();
 
     log.appendLine(
@@ -116,5 +122,9 @@ export default class SignManager {
     });
 
     await this.nvim.resumeNotification();
+  }
+
+  async updateCurrentBufferResults() {
+    return this.updateBufferResults(await workspace.document);
   }
 }
