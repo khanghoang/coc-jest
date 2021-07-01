@@ -91,11 +91,13 @@
     "webpack-cli": "^3.3.4"
   },
   "dependencies": {
+    "@types/semver": "^7.3.6",
     "jest": "^24.9.0",
     "jest-editor-support": "29.0.0",
     "js-yaml": "^3.13.1",
     "mixin-deep": "^2.0.1",
     "prettier": "^2.3.2",
+    "semver": "^7.3.5",
     "set-value": "^2.0.1",
     "vscode-languageserver-protocol": "^3.14.1",
     "which": "^1.3.1"

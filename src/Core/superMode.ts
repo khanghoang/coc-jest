@@ -4,8 +4,14 @@ import {
   JestAssertionResults,
   Location,
 } from "jest-editor-support";
+import { getLogChannel } from "../Log";
 import { CodeLens } from "vscode-languageserver-protocol";
-import { CodeLensProvider, diagnosticManager } from "coc.nvim";
+import SignManager, {
+  TestResult,
+  TestPassFail,
+  AllResults,
+} from "../sign-manager";
+import { CodeLensProvider, diagnosticManager, workspace } from "coc.nvim";
 import { VimJest } from "../VimJest";
 import { resolveRoot } from "../resolveRoot";
 import { resolveJest } from "../resolveJest";
@@ -19,6 +25,9 @@ const hasLocationInfo = (
   typeof (results as AssertResultsWithLocation).location === "object";
 
 export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
+  const log = getLogChannel();
+
+  log.appendLine(`Creating codelens provider`);
   const root = await resolveRoot();
   const jest = await resolveJest();
   const configFile = await resolveConfigFile();
@@ -39,18 +48,36 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
 
   let collection = diagnosticManager.create("test");
 
+  const signs = new SignManager(workspace.nvim);
+
+  await signs.defineSigns();
+
   vimJest.startProcess();
 
   return {
     provideCodeLenses: (): Promise<CodeLens[]> => {
       return new Promise((resolve) => {
-        vimJest.handler = (data: JestTotalResults) => {
+        vimJest.handler = async (data: JestTotalResults) => {
           let codeLens = [];
+          const allResultsForSignManager: AllResults = {};
           data.testResults.forEach((objAssertionResults) => {
             const uri = "file://" + objAssertionResults.name;
             let diagnostics = [];
+            const signManagerResults: TestResult[] = [];
             collection.set(uri, []);
             objAssertionResults.assertionResults.forEach((test) => {
+              if (hasLocationInfo(test)) {
+                const result =
+                  test.status === "failed"
+                    ? TestPassFail.Fail
+                    : TestPassFail.Pass;
+
+                signManagerResults.push({
+                  result,
+                  line: test.location.line,
+                });
+              }
+
               if (test.status === "failed" && hasLocationInfo(test)) {
                 const range = {
                   start: {
@@ -66,10 +93,12 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
                 diagnostics.push(diagnostic);
               }
             });
+            allResultsForSignManager[uri] = signManagerResults;
             collection.set(uri, diagnostics);
           });
           vimJest.handler = () => {};
           resolve(codeLens);
+          await signs.storeNewTestResults(allResultsForSignManager);
         };
       });
     },

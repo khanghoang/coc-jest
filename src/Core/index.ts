@@ -6,6 +6,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   let { subscriptions } = context;
   const logChannel = createLogChannel();
 
+  logChannel.appendLine(`Activating coc-jest`);
   const codeLensProviderDisposable = languages.registerCodeLensProvider(
     [
       { language: "typescript" },
@@ -20,7 +21,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   );
 
   subscriptions.push(logChannel);
-  logChannel.append("test test test inline guest ");
 
   subscriptions.push(codeLensProviderDisposable);
 }

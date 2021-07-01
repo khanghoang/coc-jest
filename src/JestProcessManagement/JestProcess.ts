@@ -1,4 +1,5 @@
 import { platform } from "os";
+import { workspace } from "coc.nvim";
 import {
   Runner,
   ProjectWorkspace,
@@ -91,6 +92,15 @@ export class JestProcess {
       this.watchMode !== WatchMode.None,
       this.watchMode === WatchMode.WatchAll
     );
+
+    const startingStatus = workspace.createStatusBarItem(1000, {
+      progress: true,
+    });
+
+    startingStatus.text = "Starting Jest runner";
+    startingStatus.show();
+
+    setTimeout(() => startingStatus.dispose(), 5000);
 
     this.runner.on("debuggerProcessExit", () => {
       if (!exited) {
