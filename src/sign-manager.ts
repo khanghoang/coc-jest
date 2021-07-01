@@ -97,7 +97,6 @@ export default class SignManager {
     log.appendLine(`Clearing signs`);
     this.nvim.call("sign_unplace", [signGroup, { buffer: bufferNumber }], true);
     const priority = this.config.get<number>("priority", 1000);
-    log.appendLine(JSON.stringify(this.allResults[uri], null, 2));
     this.allResults[uri].forEach((result) => {
       const signName =
         result.result === TestPassFail.Pass

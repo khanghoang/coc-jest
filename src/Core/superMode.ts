@@ -19,6 +19,23 @@ import { resolveConfigFile } from "../resolveConfigFile";
 
 type AssertResultsWithLocation = JestAssertionResults & { location: Location };
 
+const getFailureLocation = (
+  failureMessage: string,
+  filePath: string
+): Location | undefined => {
+  const fileLine = failureMessage
+    .split("\n")
+    .find((line) => line.includes(filePath));
+  if (fileLine) {
+    const matchResult = /(?<line>\d+):(?<column>\d+)/.exec(fileLine);
+    return {
+      column: Number.parseInt(matchResult.groups.column, 10),
+      line: Number.parseInt(matchResult.groups.line, 10),
+    };
+  }
+  return undefined;
+};
+
 const hasLocationInfo = (
   results: JestAssertionResults
 ): results is AssertResultsWithLocation =>
@@ -79,14 +96,20 @@ export const createTestLensProvider = async (): Promise<CodeLensProvider> => {
               }
 
               if (test.status === "failed" && hasLocationInfo(test)) {
+                const location = getFailureLocation(
+                  test.failureMessages[0],
+                  objAssertionResults.name
+                );
+                const line = location?.line ?? test.location.line;
+                const col = location?.column ?? test.location.column;
                 const range = {
                   start: {
-                    line: test.location.line,
-                    character: test.location.column + 1,
+                    line: line - 1,
+                    character: col - 1,
                   },
                   end: {
-                    line: test.location.line,
-                    character: test.location.column + 1,
+                    line: line - 1,
+                    character: col - 1,
                   },
                 };
                 let diagnostic = { message: test.failureMessages[0], range };

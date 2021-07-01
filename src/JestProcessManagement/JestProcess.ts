@@ -83,6 +83,7 @@ export class JestProcess {
     const options = {
       noColor: true,
       shell: platform() === "win32",
+      args: { args: ["--verbose"] },
     };
     this.runner = new Runner(this.projectWorkspace, options);
 
@@ -92,15 +93,6 @@ export class JestProcess {
       this.watchMode !== WatchMode.None,
       this.watchMode === WatchMode.WatchAll
     );
-
-    const startingStatus = workspace.createStatusBarItem(1000, {
-      progress: true,
-    });
-
-    startingStatus.text = "Starting Jest runner";
-    startingStatus.show();
-
-    setTimeout(() => startingStatus.dispose(), 5000);
 
     this.runner.on("debuggerProcessExit", () => {
       if (!exited) {
